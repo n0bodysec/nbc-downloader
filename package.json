@@ -1,0 +1,40 @@
+{
+  "name": "nbc-downloader",
+  "version": "1.0.0",
+  "description": "An NBC.com downloader",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "commander": "^9.1.0",
+    "log4js": "^6.4.4",
+    "prompt": "^1.2.2",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-n0bodysec": "github:n0bodysec/eslint-config-n0bodysec",
+    "npm-check-updates": "^12.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
+  },
+  "keywords": [
+    "valstrats",
+    "valstrats.js",
+    "hitbox",
+    "valorant",
+    "database",
+    "unofficial"
+  ],
+  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/n0bodysec/nbc-downloader/issues"
+  },
+  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme"
+}
