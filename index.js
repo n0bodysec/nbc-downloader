@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 
 import axios from 'axios';
-import fs from 'fs';
+import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
@@ -221,13 +221,13 @@ import { printError, ensureDir } from './src/utils/functions.js';
 
 							ensureDir(tmpDir);
 
-							fs.appendFile(filename, parsedRet, (e) => { if (e) throw e; });
+							await fs.writeFile(filename, parsedRet);
 							logger(`Successfully created m3u8 file on: ${filename}`);
 							outputPath = filename;
 						}
 						else
 						{
-							fs.appendFile(options.output, parsedRet, (e) => { if (e) throw e; });
+							await fs.writeFile(options.output, parsedRet);
 							logger(`Successfully created m3u8 file on: ${options.output}`);
 							outputPath = options.output;
 						}
