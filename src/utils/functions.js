@@ -20,3 +20,12 @@ export const ensureDir = (dir) =>
 
 	return null;
 };
+
+export const getVideoType = (programmingType, fullEpisode) =>
+{
+	if (programmingType === undefined || fullEpisode === undefined) return 'Unknown';
+	if (programmingType === 'Movie') return 'Movie';
+	if (programmingType === 'Full Episode' && fullEpisode === 'true') return 'Show';
+
+	return 'Clip';
+};

@@ -12,18 +12,9 @@ import { spawn } from 'child_process';
 import NBC from './src/api/index.js';
 import apiConstants from './src/api/utils/constants.js';
 import logger from './src/utils/logger.js';
-import { printError, ensureDir } from './src/utils/functions.js';
+import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 
 //! If you send 6 getSession() with invalid password, the account will be LOCKED
-
-function getVideoType(programmingType, fullEpisode)
-{
-	if (programmingType === undefined || fullEpisode === undefined) return 'Unknown';
-	if (programmingType === 'Movie') return 'Movie';
-	if (programmingType === 'Full Episode' && fullEpisode === 'true') return 'Show';
-
-	return 'Clip';
-}
 
 (async () =>
 {
