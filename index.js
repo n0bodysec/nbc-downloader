@@ -260,18 +260,15 @@ import { printError, ensureDir } from './src/utils/functions.js';
 
 							const ffmpeg = spawn(options.ffmpeg === undefined ? ffmpegPath : options.ffmpeg, ['-protocol_whitelist', 'file,http,https,tcp,tls,crypto', '-i', outputPath, '-c', 'copy', options.convert, '-y']);
 
-							if (options.verbose >= 1) // TODO: fix ffmpeg not finishing without verbose
-							{
-								ffmpeg.stdout.on('data', (data) => console.log(data.toString()));
-								ffmpeg.stderr.on('data', (data) => console.log(data.toString()));
-							}
-							else
+							if (options.verbose < 1)
 							{
 								logger('FFmpeg output will not be displayed because the verbosity level is lower than 1', 'warn');
 								logger('Please wait for the task to finish', 'warn');
 							}
 
-							ffmpeg.on('message', (message) => console.log(message));
+							ffmpeg.stdout.on('data', (data) => { if (options.verbose >= 1) console.log(data.toString()); });
+							ffmpeg.stderr.on('data', (data) => { if (options.verbose >= 1) console.log(data.toString()); });
+							ffmpeg.on('message', (message) => { if (options.verbose >= 1) console.log(message); });
 
 							ffmpeg.on('exit', (code) =>
 							{
