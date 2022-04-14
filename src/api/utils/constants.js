@@ -3,6 +3,8 @@ export default Object.freeze({
 	SESSION_URL: 'https://id.nbc.com/api/2020-07/profile/email/session',
 	ACCESS_VOD_URL: 'https://access-cloudpath.media.nbcuni.com/access/vod/nbcuniversal/', // + mpxGuid
 
+	FREE_CREDITS: 3, // free credits per accounts
+
 	brandsAccountId: {
 		Bravo: 2304980677,
 		CNBC: 2304981409,

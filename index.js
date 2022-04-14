@@ -10,6 +10,7 @@ import { program } from 'commander';
 import { parseString } from 'xml2js';
 import { spawn } from 'child_process';
 import NBC from './src/api/index.js';
+import apiConstants from './src/api/utils/constants.js';
 import logger from './src/utils/logger.js';
 import { printError, ensureDir } from './src/utils/functions.js';
 
@@ -84,8 +85,8 @@ import { printError, ensureDir } from './src/utils/functions.js';
 				try
 				{
 					const nbc = new NBC();
-
 					const mpxGuidSplit = mpxGuid.split(',').filter((x) => x);
+					let generatedRandomCreds = 0;
 
 					if (mpxGuidSplit.length > 1)
 					{
@@ -112,21 +113,17 @@ import { printError, ensureDir } from './src/utils/functions.js';
 							logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
 						}
 
-						if (options.password === undefined)
+						if (options.username !== undefined && options.password === undefined) { logger('The option \'--password\' must be set if \'--username\' is set.', 'error'); return 1; }
+						if (options.username === undefined && options.password !== undefined) { logger('The option \'--username\' must be set if \'--password\' is set.', 'error'); return 1; }
+						if (options.username === undefined || options.password === undefined)
 						{
-							if (options.username !== undefined)
-							{
-								logger('The option \'--password\' must be set if \'--username\' is set.', 'error');
-								return 1;
-							}
-							options.password = 'P4ss@' + randomBytes(5).toString('hex');
-							logger('Password is not defined. A randomly generated value will be used: ' + options.password, 'warn');
-						}
+							generatedRandomCreds++;
 
-						if (options.username === undefined)
-						{
 							options.username = randomBytes(8).toString('hex') + '@gmail.com';
 							logger('Username is not defined. A randomly generated value will be used: ' + options.username, 'warn');
+
+							options.password = 'P4ss@' + randomBytes(5).toString('hex');
+							logger('Password is not defined. A randomly generated value will be used: ' + options.password, 'warn');
 						}
 
 						const register = await nbc.account.registerSimple(options.username, options.password);
@@ -263,7 +260,7 @@ import { printError, ensureDir } from './src/utils/functions.js';
 
 							const ffmpeg = spawn(options.ffmpeg === undefined ? ffmpegPath : options.ffmpeg, ['-protocol_whitelist', 'file,http,https,tcp,tls,crypto', '-i', outputPath, '-c', 'copy', options.convert, '-y']);
 
-							if (options.verbose >= 1)
+							if (options.verbose >= 1) // TODO: fix ffmpeg not finishing without verbose
 							{
 								ffmpeg.stdout.on('data', (data) => console.log(data.toString()));
 								ffmpeg.stderr.on('data', (data) => console.log(data.toString()));
@@ -281,6 +278,18 @@ import { printError, ensureDir } from './src/utils/functions.js';
 								if (code === 0) logger(`All tasks done! Please check ${options.convert} for the output file`);
 								logger('FFmpeg exited with code ' + code, 'warn');
 							});
+						}
+
+						if (generatedRandomCreds > 0)
+						{
+							if (generatedRandomCreds === apiConstants.FREE_CREDITS)
+							{
+								logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
+								generatedRandomCreds = 0;
+							}
+
+							options.username = undefined;
+							options.password = undefined;
 						}
 
 						if (mpxGuidSplit.length > 1) console.log('\n\n\n');
