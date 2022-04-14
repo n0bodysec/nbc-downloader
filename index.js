@@ -100,11 +100,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 					for (const currMpxGuid of mpxGuidSplit) // eslint-disable-line no-restricted-syntax
 					{
 						mpxGuid = currMpxGuid;
-						if (mpxGuidSplit.length > 1)
-						{
-							logger('Processing a new mpxGuid...', 'warn');
-							logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
-						}
+						if (mpxGuidSplit.length > 1) logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
 
 						if (options.username !== undefined && options.password === undefined) { logger('The option \'--password\' must be set if \'--username\' is set.', 'error'); return 1; }
 						if (options.username === undefined && options.password !== undefined) { logger('The option \'--username\' must be set if \'--password\' is set.', 'error'); return 1; }
@@ -126,22 +122,22 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 						const session = await nbc.account.getSession(options.username, options.password);
 						logger(`Session returned: ${session.data.result.code} - ${session.data.result.description}`, session.data.result.code === 200 ? 'info' : 'error');
 						if (session.data.result.code !== 200) return 1;
-						logger(`Obtained tokenId for user ${options.username}`);
+						if (options.verbose >= 1) logger(`Obtained tokenId for user ${options.username}`);
 
 						const link = await nbc.stream.getLink(mpxGuid, mpxAccountId, session.data.session.tokenId).catch((e) =>
 						{
 							logger(`Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`, 'error');
 							process.exit(1);
 						});
-						logger(`Obtained stream link for guid=${mpxGuid},account=${mpxAccountId}: ${link.data.url}`);
+						if (options.verbose >= 1) logger(`Obtained stream link: ${link.data.url}`);
 
 						const smil = await nbc.stream.getSmilHls(link.data.url);
 
 						if (smil.data.indexOf('link.theplatform.com/s/errorFiles/Unavailable.mp4') !== -1)
 						{
-							if (options.verbose < 2)
+							if (options.verbose < 3)
 							{
-								logger('Something went wrong trying to read the XML file. For more information, try again with \'-vv\'', 'error');
+								logger('Something went wrong trying to read the XML file. For more information, try again with \'-vvv\'', 'error');
 							}
 							else
 							{
@@ -173,8 +169,8 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 						videoInfo.type = getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
 						if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x) => x.$.name === 'episodeNumber')[0].$.value;
 
-						logger(`Fetched information: [${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`);
-						logger('Obtained a list of video resolutions');
+						if (options.verbose >= 1) logger(`Fetched information: [${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`);
+						if (options.verbose > 1) logger('Obtained a list of video resolutions');
 
 						let idx = 0;
 						videos.forEach((x) =>
@@ -209,15 +205,15 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 						logger(`Selected resolution: ${selectedVideo.$.width}x${selectedVideo.$.height}`);
 
 						const baseUrl = selectedVideo.$.src.replace('master_hls.m3u8', '');
-						logger(`Stream base url: ${baseUrl}`);
+						if (options.verbose >= 1) logger(`Stream base url: ${baseUrl}`);
 
 						const masterHls = await axios.get(selectedVideo.$.src);
 						const playlistFile = nbc.utils.getLineContainingStr(masterHls.data, selectedVideo.$.height + '_hls');
-						logger(`Playlist file: ${playlistFile}`);
+						if (options.verbose >= 1) logger(`Playlist file: ${playlistFile}`);
 
 						const m3u8 = await axios.get(baseUrl + playlistFile);
 						const parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlistFile.split('/')[0] + '/$1');
-						logger('Playlist file (m3u8) retrieved and parsed');
+						if (options.verbose >= 1) logger('Playlist file crafted');
 
 						let outputPath;
 						if (options.output === undefined)
@@ -266,15 +262,15 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 
 							const ffmpeg = spawn(options.ffmpeg === undefined ? ffmpegPath : options.ffmpeg, ['-protocol_whitelist', 'file,http,https,tcp,tls,crypto', '-i', outputPath, '-c', 'copy', options.convert, '-y']);
 
-							if (options.verbose < 1)
+							if (options.verbose < 2)
 							{
-								logger('FFmpeg output will not be displayed because the verbosity level is lower than 1', 'warn');
+								logger('FFmpeg output will not be displayed because the verbosity level is lower than 2', 'warn');
 								logger('Please wait for the task to finish', 'warn');
 							}
 
-							ffmpeg.stdout.on('data', (data) => { if (options.verbose >= 1) console.log(data.toString()); });
-							ffmpeg.stderr.on('data', (data) => { if (options.verbose >= 1) console.log(data.toString()); });
-							ffmpeg.on('message', (message) => { if (options.verbose >= 1) console.log(message); });
+							ffmpeg.stdout.on('data', (data) => { if (options.verbose >= 2) console.log(data.toString()); });
+							ffmpeg.stderr.on('data', (data) => { if (options.verbose >= 2) console.log(data.toString()); });
+							ffmpeg.on('message', (message) => { if (options.verbose >= 2) console.log(message); });
 
 							ffmpeg.on('exit', (code) =>
 							{
