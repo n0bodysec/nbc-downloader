@@ -25,13 +25,6 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 			.description('nbc.com downloader from cli')
 			.version('1.0.0');
 
-		/* program.configureHelp({
-			argumentDescription: (arg) => arg.description.charAt(0).toLowerCase() + arg.description.slice(1),
-			optionDescription: (option) => option.description.charAt(0).toLowerCase() + option.description.slice(1),
-			subcommandDescription: (cmd) => cmd.description().charAt(0).toLowerCase() + cmd.description().slice(1),
-			// commandDescription: (cmd) => cmd.description().charAt(0).toLowerCase() + cmd.description().slice(1),
-		}); */
-
 		program.command('parse')
 			.description('get mpxGuid and mpxAccountId from the given nbc.com url')
 			.argument('<url>', 'nbc.com url to parse')
