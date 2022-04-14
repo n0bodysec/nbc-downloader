@@ -138,6 +138,11 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 							if (options.verbose < 3)
 							{
 								logger('Something went wrong trying to read the XML file. For more information, try again with \'-vvv\'', 'error');
+								parseString(smil.data, (err, res) =>
+								{
+									const errorInfo = res.smil.body[0].seq[0].ref[0];
+									logger(`Smil returned: ${errorInfo.$.title} - ${errorInfo.$.abstract}`, 'error');
+								});
 							}
 							else
 							{
