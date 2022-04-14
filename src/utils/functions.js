@@ -4,7 +4,7 @@ import logger from './logger.js';
 export const printError = (e) =>
 {
 	logger('CRITICAL ERROR - SOMETHING HAS GONE TERRIBLY WRONG', 'fatal');
-	console.error(e);
+	console.error(`Name: ${e.name}\nStack: ${e.stack}\nMessage: ${e}`);
 };
 
 export const ensureDir = (dir) =>
