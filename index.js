@@ -16,6 +16,15 @@ import { printError, ensureDir } from './src/utils/functions.js';
 
 //! If you send 6 getSession() with invalid password, the account will be LOCKED
 
+function getVideoType(programmingType, fullEpisode)
+{
+	if (programmingType === undefined || fullEpisode === undefined) return 'Unknown';
+	if (programmingType === 'Movie') return 'Movie';
+	if (programmingType === 'Full Episode' && fullEpisode === 'true') return 'Show';
+
+	return 'Clip';
+}
+
 (async () =>
 {
 	try
@@ -167,7 +176,20 @@ import { printError, ensureDir } from './src/utils/functions.js';
 							videosRef = res.smil.body[0].seq[0].par[0].switch[0].ref[0];
 						});
 
-						logger(`Fetched information: ${videosRef.param.filter((x) => x.$.name === 'show')[0].$.value} - ${videosRef.$.title}`);
+						const videoInfo = {
+							title: videosRef.$.title,
+							show: videosRef.param.filter((x) => x.$.name === 'show')[0].$.value,
+							programmingType: videosRef.param.filter((x) => x.$.name === 'programmingType')[0].$.value,
+							fullEpisode: videosRef.param.filter((x) => x.$.name === 'fullEpisode')[0].$.value,
+							seasonNumber: videosRef.param.filter((x) => x.$.name === 'seasonNumber')[0].$.value,
+							episodeNumber: undefined,
+							type: null,
+						};
+
+						videoInfo.type = getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
+						if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x) => x.$.name === 'episodeNumber')[0].$.value;
+
+						logger(`Fetched information: [${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`);
 						logger('Obtained a list of video resolutions');
 
 						let idx = 0;
