@@ -284,14 +284,10 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 							});
 						}
 
-						if (generatedRandomCreds > 0)
+						if (generatedRandomCreds === apiConstants.FREE_CREDITS)
 						{
-							if (generatedRandomCreds === apiConstants.FREE_CREDITS)
-							{
-								logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
-								generatedRandomCreds = 0;
-							}
-
+							logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
+							generatedRandomCreds = 0;
 							options.username = undefined;
 							options.password = undefined;
 						}
