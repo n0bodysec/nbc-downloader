@@ -29,15 +29,10 @@ const account = function account(api)
 			password,
 		});
 
-		const ret = await axios.post(constants.REGISTER_URL, request, { headers });
-		return ret;
+		return axios.post(constants.REGISTER_URL, request, { headers });
 	};
 
-	this.registerSimple = async (email, password) =>
-	{
-		const ret = await this.register(email, email, password, 'John', 'Doe', 'Man', '11111', 1990);
-		return ret;
-	};
+	this.registerSimple = async (email, password) => this.register(email, email, password, 'John', 'Doe', 'Man', '11111', 1990);
 
 	this.getSession = async (username, password) =>
 	{
@@ -50,8 +45,7 @@ const account = function account(api)
 			Idm_tx_ref: crypto.randomUUID(),
 		};
 
-		const ret = await axios.get(constants.SESSION_URL, { headers });
-		return ret;
+		return axios.get(constants.SESSION_URL, { headers });
 	};
 };
 

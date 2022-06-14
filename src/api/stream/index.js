@@ -16,16 +16,10 @@ const stream = function stream(api) // eslint-disable-line no-unused-vars
 			mpxAccountId,
 		});
 
-		const ret = await axios.post(constants.ACCESS_VOD_URL + mpxGuid, request, { headers });
-		return ret;
+		return axios.post(constants.ACCESS_VOD_URL + mpxGuid, request, { headers });
 	};
 
-	this.getSmilHls = async (link) =>
-	{
-		// link: return of this.getLink()
-		const ret = await axios.get(link + '&switch=HLSServiceSecure&format=SMIL');
-		return ret;
-	};
+	this.getSmilHls = async (link) => axios.get(link + '&switch=HLSServiceSecure&format=SMIL'); // link: return of this.getLink()
 };
 
 export default stream;
