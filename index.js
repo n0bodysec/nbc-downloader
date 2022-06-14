@@ -117,12 +117,12 @@ import * as utils from './src/utils/functions.js';
 						logger(`Account creation returned: ${register.data.result.code} - ${register.data.result.description}`, register.data.result.code === 200 ? 'info' : 'warn');
 						// if (register.data.result.code !== 200) return 1;
 
-						const session = await nbc.account.getSession(options.username, options.password);
+						const session = await nbc.account.getSession();
 						logger(`Session returned: ${session.data.result.code} - ${session.data.result.description}`, session.data.result.code === 200 ? 'info' : 'error');
 						if (session.data.result.code !== 200) return 1;
 						if (options.verbose >= 1) logger(`Obtained tokenId for user ${options.username}`);
 
-						const link = await nbc.stream.getLink(mpxGuid, mpxAccountId, session.data.session.tokenId).catch((e) =>
+						const link = await nbc.stream.getLink(mpxGuid, mpxAccountId).catch((e) =>
 						{
 							logger(`Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`, 'error');
 							process.exit(1); // return 1;

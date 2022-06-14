@@ -3,13 +3,15 @@ import constants from '../utils/constants.js';
 
 class stream
 {
-	constructor (api) // eslint-disable-line no-unused-vars
+	constructor (base)
 	{
-		this.getLink = async (mpxGuid, mpxAccountId, idmToken, date = undefined) =>
+		this.getLink = async (mpxGuid, mpxAccountId, idmToken = base.tokenId, date = undefined) =>
 		{
+			if (idmToken == null) throw new Error('idmToken cannot be null nor undefined');
+
 			const headers = {
 				'Content-Type': 'application/json',
-				Authorization: `NBC-Referrer key=desktop_nbcuniversal,version=3.0,time=${date || new Date(Date.now()).toISOString()},idmToken=${idmToken}`,
+				Authorization: `NBC-Referrer key=desktop_nbcuniversal,version=3.0,time=${date ?? new Date(Date.now()).toISOString()},idmToken=${idmToken}`,
 				Referer: 'https://www.nbc.com/',
 			};
 

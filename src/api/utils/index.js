@@ -3,10 +3,12 @@ import path from 'path';
 
 class utils
 {
-	constructor (api) // eslint-disable-line no-unused-vars
+	constructor (base)
 	{
-		this.encodePassword = (password) =>
+		this.encodePassword = (password = base.password) =>
 		{
+			if (password == null) throw new Error('password cannot be null nor undefined');
+
 			const prefix = '=?UTF-8?B?';
 			const suffix = '?=';
 			const encoded = Buffer.from(password).toString('base64');
