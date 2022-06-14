@@ -125,8 +125,9 @@ import * as utils from './src/utils/functions.js';
 						const link = await nbc.stream.getLink(mpxGuid, mpxAccountId, session.data.session.tokenId).catch((e) =>
 						{
 							logger(`Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`, 'error');
-							return 1;
+							process.exit(1); // return 1;
 						});
+
 						if (options.verbose >= 1) logger(`Obtained stream link: ${link.data.url}`);
 
 						const smil = await nbc.stream.getSmilHls(link.data.url);
