@@ -48,6 +48,18 @@ class account
 
 			return axios.get(constants.SESSION_URL, { headers });
 		};
+
+		this.getProfile = async (tokenId) =>
+		{
+			const headers = {
+				Session_token: tokenId,
+				Idmversion: 'v2',
+				'X-Idm-Brand-Source': 'nbcd_web',
+				Idm_tx_ref: crypto.randomUUID(),
+			};
+
+			return axios.get(constants.PROFILE_URL, { headers });
+		};
 	}
 }
 

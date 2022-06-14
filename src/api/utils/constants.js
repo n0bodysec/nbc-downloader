@@ -1,6 +1,7 @@
 export default Object.freeze({
 	REGISTER_URL: 'https://id.nbc.com/api/2021-08/profile/email/register',
 	SESSION_URL: 'https://id.nbc.com/api/2020-07/profile/email/session',
+	PROFILE_URL: 'https://id.nbc.com/api/v3/profile',
 	ACCESS_VOD_URL: 'https://access-cloudpath.media.nbcuni.com/access/vod/nbcuniversal/', // + mpxGuid
 
 	FREE_CREDITS: 3, // free credits per accounts
