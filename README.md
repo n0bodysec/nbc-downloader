@@ -50,6 +50,7 @@ Feel free to give me feedback.
 ## 📜 Notice
 
 Do not create unnecessary user accounts. Please respect the credit limit of free accounts or use a premium account.  
-Please use this tool for educational purposes only. The distribution or copying of copyrighted content without prior authorization is a crime.
+Please use this tool for educational purposes only. The distribution or copying of copyrighted content without prior authorization is a crime.  
+The NBC.com platform has regional content limitations, please do not attempt to circumvent these limitations by using this program.
 
 I am not affiliated with or endorsed by NBCUniversal Media, LLC. or any of its affiliates.
