@@ -5,14 +5,13 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
-import { randomBytes } from 'crypto';
 import { program } from 'commander';
 import { parseString } from 'xml2js';
 import { spawn } from 'child_process';
 import NBC from './src/api/index.js';
 import apiConstants from './src/api/utils/constants.js';
 import logger from './src/utils/logger.js';
-import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
+import * as utils from './src/utils/functions.js';
 
 //! If you send 6 getSession() with invalid password, the account will be LOCKED
 
@@ -55,7 +54,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 				}
 				catch (e)
 				{
-					printError(e);
+					utils.printError(e);
 					process.exit(1);
 				}
 
@@ -79,7 +78,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 				{
 					const nbc = new NBC();
 					const mpxGuidSplit = mpxGuid.split(',').filter((x) => x);
-					let generatedRandomCreds = 0;
+					let downloadCount = 0;
 
 					if (mpxGuidSplit.length > 1)
 					{
@@ -100,20 +99,19 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 					for (const currMpxGuid of mpxGuidSplit) // eslint-disable-line no-restricted-syntax
 					{
 						mpxGuid = currMpxGuid;
-						if (mpxGuidSplit.length > 1) logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
 
 						if (options.username !== undefined && options.password === undefined) { logger('The option \'--password\' must be set if \'--username\' is set.', 'error'); return 1; }
 						if (options.username === undefined && options.password !== undefined) { logger('The option \'--username\' must be set if \'--password\' is set.', 'error'); return 1; }
 						if (options.username === undefined || options.password === undefined)
 						{
-							generatedRandomCreds++;
+							const creds = utils.genCredentials();
+							options.username = creds.username;
+							options.password = creds.password;
 
-							options.username = randomBytes(8).toString('hex') + '@gmail.com';
-							logger('Username is not defined. A randomly generated value will be used: ' + options.username, 'warn');
-
-							options.password = 'P4ss@' + randomBytes(5).toString('hex');
-							logger('Password is not defined. A randomly generated value will be used: ' + options.password, 'warn');
+							logger(`Generated random credentials: ${options.username}, ${options.password}`, 'warn');
 						}
+
+						if (mpxGuidSplit.length > 1) logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
 
 						const register = await nbc.account.registerSimple(options.username, options.password);
 						logger(`Account creation returned: ${register.data.result.code} - ${register.data.result.description}`, register.data.result.code === 200 ? 'info' : 'warn');
@@ -171,7 +169,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 							type: null,
 						};
 
-						videoInfo.type = getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
+						videoInfo.type = utils.getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
 						if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x) => x.$.name === 'episodeNumber')[0].$.value;
 
 						if (options.verbose >= 1) logger(`Fetched information: [${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`);
@@ -226,7 +224,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 							const tmpDir = path.join(os.tmpdir(), 'nbc-downloader');
 							const filename = path.join(tmpDir, `${mpxAccountId}-${mpxGuid}.m3u8`);
 
-							ensureDir(tmpDir);
+							utils.ensureDir(tmpDir);
 
 							await fs.writeFile(filename, parsedRet);
 							logger(`Successfully created m3u8 file on: ${filename}`);
@@ -259,7 +257,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 								const tmpDir = path.join(os.tmpdir(), 'nbc-downloader');
 								const filename = path.join(tmpDir, `${mpxAccountId}-${mpxGuid}.mp4`);
 
-								ensureDir(tmpDir);
+								utils.ensureDir(tmpDir);
 								options.convert = filename;
 
 								logger('Multiple \'mpxGuid\' detected. The .mp4 output path will be ' + options.convert, 'warn');
@@ -284,10 +282,12 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 							});
 						}
 
-						if (generatedRandomCreds === apiConstants.FREE_CREDITS)
+						downloadCount++; // TODO: check the remaining credits in the account
+
+						if (downloadCount >= apiConstants.FREE_CREDITS)
 						{
 							logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
-							generatedRandomCreds = 0;
+							downloadCount = 0;
 							options.username = undefined;
 							options.password = undefined;
 						}
@@ -297,7 +297,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 				}
 				catch (e)
 				{
-					printError(e);
+					utils.printError(e);
 					process.exit(1);
 				}
 
@@ -308,7 +308,7 @@ import { printError, ensureDir, getVideoType } from './src/utils/functions.js';
 	}
 	catch (e)
 	{
-		printError(e);
+		utils.printError(e);
 		process.exit(1);
 	}
 })();

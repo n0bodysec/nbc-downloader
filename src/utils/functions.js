@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { randomBytes } from 'crypto';
 import logger from './logger.js';
 
 export const printError = (e) =>
@@ -28,4 +29,12 @@ export const getVideoType = (programmingType, fullEpisode) =>
 	if (programmingType === 'Full Episode' && fullEpisode === 'true') return 'Show';
 
 	return 'Clip';
+};
+
+export const genCredentials = () =>
+{
+	return {
+		username: randomBytes(8).toString('hex') + '@gmail.com',
+		password: 'P4ss@' + randomBytes(5).toString('hex'),
+	};
 };
