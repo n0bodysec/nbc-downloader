@@ -79,7 +79,7 @@ import * as utils from './src/utils/functions.js';
 				{
 					const nbc = new NBC();
 					const mpxGuidSplit = mpxGuid.split(',').filter((x) => x);
-					let downloadCount = 0;
+					let episodeCount = apiConstants.FREE_CREDITS;
 
 					if (mpxGuidSplit.length > 1)
 					{
@@ -293,15 +293,26 @@ import * as utils from './src/utils/functions.js';
 							});
 						}
 
-						downloadCount++; // TODO: check the remaining credits in the account
-
-						if (downloadCount >= apiConstants.FREE_CREDITS)
+						const profile = await nbc.account.getProfile();
+						if (profile.data.result.code !== 200)
 						{
-							logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
-							downloadCount = 0;
+							logger(`Profile returned: ${session.data.result.code} - ${session.data.result.description}`, 'warn');
+							episodeCount--; // TODO: check if the current mpxGuid is premium
+						}
+						else episodeCount = profile.data.profile.episodeCount;
+
+						if (episodeCount === 0) // TODO: check if episodeCount is NOT zero on premium accounts
+						{
+							if (options.register) logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
+							else
+							{
+								logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! Exiting...`, 'warn');
+								return 1;
+							}
+
+							episodeCount = apiConstants.FREE_CREDITS;
 							options.username = undefined;
 							options.password = undefined;
-							options.register = true;
 						}
 
 						if (mpxGuidSplit.length > 1) console.log('\n\n\n');
