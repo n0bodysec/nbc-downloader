@@ -68,6 +68,7 @@ import * as utils from './src/utils/functions.js';
 			.option('-u, --username <email>', 'account email address')
 			.option('-p, --password <password', 'account password')
 			.option('-r, --register', 'register a new account instead of login with the specified credentials (optional)')
+			.option('-t, --premium', 'assume that the specified account is premium to avoid some checks and gain some speed (optional)') // -t means TV Provider (-p is already used for --password)
 			.option('-o, --output <filename>', 'output filename (optional)')
 			.option('-c, --convert <filename>', 'convert m3u8 file to mp4 using ffmpeg (optional)')
 			.option('-f, --ffmpeg <path>', 'ffmpeg path (optional)')
@@ -101,9 +102,14 @@ import * as utils from './src/utils/functions.js';
 					{
 						mpxGuid = currMpxGuid;
 
+						if (options.premium !== undefined && (options.username === undefined || options.password === undefined)) { logger('The options \'--username\' and \'--password\' must be set if \'--premium\' is set.', 'error'); return 1; }
+						if (options.premium !== undefined && options.register !== undefined) { logger('The option \'--register\' must NOT be set if \'--premium\' is set.', 'error'); return 1; }
+
 						if (options.register === undefined && (options.username === undefined || options.password === undefined)) { logger('The options \'--username\' and \'--password\' must be set if \'--register\' is not set.', 'error'); return 1; }
+
 						if (options.username !== undefined && options.password === undefined) { logger('The option \'--password\' must be set if \'--username\' is set.', 'error'); return 1; }
 						if (options.username === undefined && options.password !== undefined) { logger('The option \'--username\' must be set if \'--password\' is set.', 'error'); return 1; }
+
 						if (options.register !== undefined && (options.username === undefined || options.password === undefined))
 						{
 							const creds = utils.genCredentials();
@@ -293,26 +299,29 @@ import * as utils from './src/utils/functions.js';
 							});
 						}
 
-						const profile = await nbc.account.getProfile();
-						if (profile.data.result.code !== 200)
+						if (options.premium === undefined)
 						{
-							logger(`Profile returned: ${session.data.result.code} - ${session.data.result.description}`, 'warn');
-							episodeCount--; // TODO: check if the current mpxGuid is premium
-						}
-						else episodeCount = profile.data.profile.episodeCount;
-
-						if (episodeCount === 0) // TODO: check if episodeCount is NOT zero on premium accounts
-						{
-							if (options.register) logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
-							else
+							const profile = await nbc.account.getProfile();
+							if (profile.data.result.code !== 200)
 							{
-								logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! Exiting...`, 'warn');
-								return 1;
+								logger(`Profile returned: ${session.data.result.code} - ${session.data.result.description}`, 'warn');
+								episodeCount--; // TODO: check if the current mpxGuid is premium
 							}
+							else episodeCount = profile.data.profile.episodeCount;
 
-							episodeCount = apiConstants.FREE_CREDITS;
-							options.username = undefined;
-							options.password = undefined;
+							if (episodeCount === 0) // TODO: check if episodeCount is NOT zero on premium accounts
+							{
+								if (options.register) logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! A new account will be generated in the next iteration.`, 'warn');
+								else
+								{
+									logger(`Free credits limit (${apiConstants.FREE_CREDITS}) reached! Exiting...`, 'warn');
+									return 1;
+								}
+
+								episodeCount = apiConstants.FREE_CREDITS;
+								options.username = undefined;
+								options.password = undefined;
+							}
 						}
 
 						if (mpxGuidSplit.length > 1) console.log('\n\n\n');
