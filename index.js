@@ -65,8 +65,9 @@ import * as utils from './src/utils/functions.js';
 			.description('download an ad-free & region-free .m3u8 file with the possibility to convert it with ffmpeg')
 			.argument('<mpxAccountId>', 'the mpxAccountId number')
 			.argument('<mpxGuid>', 'the mpxGuid number')
-			.option('-u, --username <email>', 'account email address (an account will be created if it does not exist)')
-			.option('-p, --password <password', 'account password (an account will be created if it does not exist)')
+			.option('-u, --username <email>', 'account email address')
+			.option('-p, --password <password', 'account password')
+			.option('-r, --register', 'register a new account instead of login with the specified credentials (optional)')
 			.option('-o, --output <filename>', 'output filename (optional)')
 			.option('-c, --convert <filename>', 'convert m3u8 file to mp4 using ffmpeg (optional)')
 			.option('-f, --ffmpeg <path>', 'ffmpeg path (optional)')
@@ -100,9 +101,10 @@ import * as utils from './src/utils/functions.js';
 					{
 						mpxGuid = currMpxGuid;
 
+						if (options.register === undefined && (options.username === undefined || options.password === undefined)) { logger('The options \'--username\' and \'--password\' must be set if \'--register\' is not set.', 'error'); return 1; }
 						if (options.username !== undefined && options.password === undefined) { logger('The option \'--password\' must be set if \'--username\' is set.', 'error'); return 1; }
 						if (options.username === undefined && options.password !== undefined) { logger('The option \'--username\' must be set if \'--password\' is set.', 'error'); return 1; }
-						if (options.username === undefined || options.password === undefined)
+						if (options.register !== undefined && (options.username === undefined || options.password === undefined))
 						{
 							const creds = utils.genCredentials();
 							options.username = creds.username;
@@ -113,9 +115,17 @@ import * as utils from './src/utils/functions.js';
 
 						if (mpxGuidSplit.length > 1) logger(`The value ${currMpxGuid} was set for mpxGuid.`, 'warn');
 
-						const register = await nbc.account.registerSimple(options.username, options.password);
-						logger(`Account creation returned: ${register.data.result.code} - ${register.data.result.description}`, register.data.result.code === 200 ? 'info' : 'warn');
-						// if (register.data.result.code !== 200) return 1;
+						if (options.register !== undefined)
+						{
+							const register = await nbc.account.registerSimple(options.username, options.password);
+							logger(`Account creation returned: ${register.data.result.code} - ${register.data.result.description}`, register.data.result.code === 200 ? 'info' : 'warn');
+							// if (register.data.result.code !== 200) return 1;
+						}
+						else
+						{
+							nbc.username = options.username;
+							nbc.password = options.password;
+						}
 
 						const session = await nbc.account.getSession();
 						logger(`Session returned: ${session.data.result.code} - ${session.data.result.description}`, session.data.result.code === 200 ? 'info' : 'error');
@@ -291,6 +301,7 @@ import * as utils from './src/utils/functions.js';
 							downloadCount = 0;
 							options.username = undefined;
 							options.password = undefined;
+							options.register = true;
 						}
 
 						if (mpxGuidSplit.length > 1) console.log('\n\n\n');
