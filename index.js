@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
+import sanitize from 'sanitize-filename';
 import { program } from 'commander';
 import { parseString } from 'xml2js';
 import { spawn } from 'child_process';
@@ -189,6 +190,8 @@ import * as utils from './src/utils/functions.js';
 						videoInfo.type = utils.getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
 						if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x) => x.$.name === 'episodeNumber')[0].$.value;
 
+						const outFilename = sanitize(videoInfo.type === 'Show' ? `${videoInfo.show} - S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title);
+
 						if (options.verbose >= 1) logger(`Fetched information: [${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`);
 						if (options.verbose > 1) logger('Obtained a list of video resolutions');
 
@@ -239,7 +242,7 @@ import * as utils from './src/utils/functions.js';
 						if (options.output === undefined)
 						{
 							const tmpDir = path.join(os.tmpdir(), 'nbc-downloader');
-							const filename = path.join(tmpDir, `${mpxAccountId}-${mpxGuid}.m3u8`);
+							const filename = path.join(tmpDir, `${outFilename}.m3u8`);
 
 							utils.ensureDir(tmpDir);
 
@@ -272,7 +275,7 @@ import * as utils from './src/utils/functions.js';
 							if (mpxGuidSplit.length > 1) // multiple mpxGuid
 							{
 								const tmpDir = path.join(os.tmpdir(), 'nbc-downloader');
-								const filename = path.join(tmpDir, `${mpxAccountId}-${mpxGuid}.mp4`);
+								const filename = path.join(tmpDir, `${outFilename}.mp4`);
 
 								utils.ensureDir(tmpDir);
 								options.convert = filename;
