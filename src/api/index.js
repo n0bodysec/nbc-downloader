@@ -12,12 +12,6 @@ class API
 		this.username = null;
 		this.password = null;
 
-		this.getUUID = (random = false) =>
-		{
-			if (random) this.idm_tx_ref = randomUUID();
-			return this.idm_tx_ref;
-		};
-
 		this.account = new Account(this);
 		this.stream = new Stream(this);
 		this.utils = new Utils(this);

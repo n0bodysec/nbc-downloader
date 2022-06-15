@@ -5,7 +5,7 @@ class account
 {
 	constructor (base)
 	{
-		this.register = async (username, email, password, name, surname, gender, zipNumber, birthYear, randomUUID = false) =>
+		this.register = async (username, email, password, name, surname, gender, zipNumber, birthYear, uuid = undefined) =>
 		{
 			// checks by NBC.com
 			if (username !== email) throw new Error('username and email must be the same');
@@ -19,7 +19,7 @@ class account
 			const headers = {
 				'Content-Type': 'application/json',
 				'X-Idm-Brand-Source': 'nbcd_web',
-				Idm_tx_ref: base.getUUID(randomUUID),
+				Idm_tx_ref: uuid ?? base.idm_tx_ref,
 			};
 
 			const request = JSON.stringify({
@@ -38,7 +38,7 @@ class account
 
 		this.registerSimple = async (email, password) => this.register(email, email, password, 'John', 'Doe', 'Man', '11111', 1990);
 
-		this.getSession = async (username = base.username, password = base.password, randomUUID = false) =>
+		this.getSession = async (username = base.username, password = base.password, uuid = undefined) =>
 		{
 			if (username == null) throw new Error('username cannot be null nor undefined');
 			if (password == null) throw new Error('password cannot be null nor undefined');
@@ -52,7 +52,7 @@ class account
 				'X-Idm-Password': base.utils.encodePassword(),
 				'X-Idm-Username': username,
 				Vppa_re_opt_in: true,
-				Idm_tx_ref: base.getUUID(randomUUID),
+				Idm_tx_ref: uuid ?? base.idm_tx_ref,
 			};
 
 			const ret = await axios.get(constants.SESSION_URL, { headers });
@@ -61,7 +61,7 @@ class account
 			return ret;
 		};
 
-		this.getProfile = async (tokenId = base.tokenId, randomUUID = false) =>
+		this.getProfile = async (tokenId = base.tokenId, uuid = undefined) =>
 		{
 			if (tokenId == null) throw new Error('tokenId cannot be null nor undefined');
 
@@ -69,7 +69,7 @@ class account
 				Session_token: tokenId,
 				Idmversion: 'v2',
 				'X-Idm-Brand-Source': 'nbcd_web',
-				Idm_tx_ref: base.getUUID(randomUUID),
+				Idm_tx_ref: uuid ?? base.idm_tx_ref,
 			};
 
 			return axios.get(constants.PROFILE_URL, { headers });
