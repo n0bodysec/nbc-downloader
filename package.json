@@ -14,8 +14,7 @@
   },
   "devDependencies": {
     "eslint": "^8.17.0",
-    "eslint-config-n0bodysec": "github:n0bodysec/eslint-config-n0bodysec",
-    "npm-check-updates": "^13.1.5"
+    "eslint-config-n0bodysec": "github:n0bodysec/eslint-config-n0bodysec"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
