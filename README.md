@@ -2,17 +2,6 @@
 
 **nbc-downloader** is a helper tool to download videos from [NBC](https://nbc.com).
 
-## Table of contents
-
-- [🃏 Features](#-features)
-- [🚀 Deploy](#-deploy)
-- [📝 Changelog](#-changelog)
-- [👏 Contribution](#-contribution)
-- [👍 Acknowledgements](#-acknowledgements)
-- [📜 License](#-license)
-- [📞 Contact](#-contact)
-- [📜 Notice](#-notice)
-
 ## 🃏 Features
 
 - Download user-free, ad-free & region-free playlist (m3u8) file.
@@ -20,15 +9,14 @@
 - Convert playlist file to mp4 using ffmpeg.
 - "Bypass" credits limit (registering a new account).
 
-## 🚀 Deploy
+## 🚀 Usage
 
-1. Git clone this repo.
-2. `cd` to the downloaded folder and run `npm install`.
-3. Run `node index.js -h` to see the program help.
+1. Install all node dependencies (`npm install`).
+2. Use `node index.js -h` to see the program help.
 
 ## 📝 Changelog
 
-You can read the [commits](../../commits).
+Read the [commits](../../commits) for a comprehensive list of changes.
 
 ## 👏 Contribution
 
