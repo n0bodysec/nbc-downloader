@@ -1,12 +1,5 @@
 import fs from 'fs';
 import { randomBytes } from 'crypto';
-import logger from './logger.js';
-
-export const printError = (e) =>
-{
-	logger('CRITICAL ERROR - SOMETHING HAS GONE TERRIBLY WRONG', 'fatal');
-	console.error(`Name: ${e.name}\nStack: ${e.stack}\nMessage: ${e}`);
-};
 
 export const ensureDir = (dir) =>
 {

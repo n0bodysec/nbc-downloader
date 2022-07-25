@@ -38,7 +38,7 @@ class account
 
 		this.registerSimple = async (email, password) => this.register(email, email, password, 'John', 'Doe', 'Man', '11111', 1990);
 
-		this.getSession = async (username = base.username, password = base.password, uuid = undefined) =>
+		this.getSession = async (username = base.username, password = base.password, uuid = undefined) => //! If you send 6 getSession() with invalid password, the account will be LOCKED
 		{
 			if (username == null) throw new Error('username cannot be null nor undefined');
 			if (password == null) throw new Error('password cannot be null nor undefined');
