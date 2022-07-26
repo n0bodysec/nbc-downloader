@@ -201,7 +201,7 @@ async function download(mpxAccountId, mpxGuid, options)
 		if (options.verbose >= 1) logger(`Stream base url: ${baseUrl}`);
 
 		const masterHls = await axios.get(selectedVideo.$.src);
-		const playlistFile = nbc.utils.getLineContainingStr(masterHls.data, selectedVideo.$.height + '_hls');
+		const playlistFile = utils.getLineContainingStr(masterHls.data, selectedVideo.$.height + '_hls');
 		if (options.verbose >= 1) logger(`Playlist file: ${playlistFile}`);
 
 		const m3u8 = await axios.get(baseUrl + playlistFile);
@@ -214,7 +214,7 @@ async function download(mpxAccountId, mpxGuid, options)
 			const tmpDir = path.join(os.tmpdir(), 'nbc-downloader');
 			const filename = path.join(tmpDir, `${outFilename}.m3u8`);
 
-			utils.ensureDir(tmpDir);
+			await utils.ensureDir(tmpDir);
 
 			await fs.writeFile(filename, parsedRet);
 			logger(`Successfully created m3u8 file on: ${filename}`);
@@ -229,7 +229,7 @@ async function download(mpxAccountId, mpxGuid, options)
 
 		if (options.convert !== undefined)
 		{
-			const ffmpegPath = await nbc.utils.findExecutable('ffmpeg');
+			const ffmpegPath = await utils.findExecutable('ffmpeg');
 			if (ffmpegPath === null && options.ffmpeg === undefined)
 			{
 				logger('The option \'--ffmpeg\' must be set to a valid ffmpeg path', 'error');
@@ -238,7 +238,7 @@ async function download(mpxAccountId, mpxGuid, options)
 
 			do
 			{
-				await nbc.utils.timeout(100);
+				await utils.timeout(100);
 			}
 			while (outputPath === undefined);
 
@@ -278,7 +278,7 @@ async function download(mpxAccountId, mpxGuid, options)
 			if (profile.data.result.code !== 200)
 			{
 				logger(`Profile returned: ${session.data.result.code} - ${session.data.result.description}`, 'warn');
-				episodeCount--; // TODO: check if the current mpxGuid is premium
+				episodeCount--; // TODO: check if the current user is premium
 			}
 			else episodeCount = profile.data.profile.episodeCount;
 

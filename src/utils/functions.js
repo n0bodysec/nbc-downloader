@@ -1,11 +1,13 @@
-import fs from 'fs';
+import fs from 'fs/promises';
+import path from 'path';
+
 import { randomBytes } from 'crypto';
 
-export const ensureDir = (dir) =>
+export const ensureDir = async (dir) =>
 {
 	try
 	{
-		return fs.mkdirSync(dir);
+		return await fs.mkdir(dir);
 	}
 	catch (e)
 	{
@@ -13,6 +15,48 @@ export const ensureDir = (dir) =>
 	}
 
 	return null;
+};
+
+export const getLineContainingStr = (data, str) =>
+{
+	const lines = data.split('\n');
+	for (let i = 0; i < lines.length; i++)
+	{
+		if (lines[i].indexOf(str) !== -1) return lines[i];
+	}
+
+	return null;
+};
+
+export const timeout = async (delayms) =>
+{
+	return new Promise((resolve) => { setTimeout(resolve, delayms); });
+};
+
+export const findExecutable = async (exe) =>
+{
+	async function checkFileExists(filePath)
+	{
+		if ((await fs.stat(filePath)).isFile())
+		{
+			return filePath;
+		}
+		throw new Error('Not a file');
+	}
+
+	const envPath = process.env.PATH || '';
+	const envExt = process.env.PATHEXT || '';
+	const pathDirs = envPath.replace(/["]+/g, '').split(path.delimiter).filter(Boolean);
+	const extensions = envExt.split(';');
+	const candidates = pathDirs.flatMap((d) => extensions.map((ext) => path.join(d, exe + ext)));
+	try
+	{
+		return await Promise.any(candidates.map(checkFileExists));
+	}
+	catch (e)
+	{
+		return null;
+	}
 };
 
 export const getVideoType = (programmingType, fullEpisode) =>
