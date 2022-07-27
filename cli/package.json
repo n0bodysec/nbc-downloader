@@ -1,0 +1,30 @@
+{
+  "name": "@nobodysec/nbcd-cli",
+  "version": "1.0.0",
+  "description": "An NBC.com downloader from CLI",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "commander": "^9.3.0",
+    "log4js": "^6.5.2",
+    "prompt": "^1.3.0",
+    "sanitize-filename": "^1.6.3",
+    "xml2js": "^0.4.23",
+    "@nobodysec/nbc-api": "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
+  },
+  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/n0bodysec/nbc-downloader/issues"
+  },
+  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme"
+}

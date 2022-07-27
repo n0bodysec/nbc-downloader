@@ -11,8 +11,9 @@
 
 ## 🚀 Usage
 
-1. Install all node dependencies (`npm install`).
-2. Use `node index.js -h` to see the program help.
+1. Install lerna (`npm install`).
+2. Run `npx lerna bootstrap`.
+2. Use `node cli/index.js -h` to see the program help.
 
 ## 📝 Changelog
 

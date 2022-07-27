@@ -9,11 +9,11 @@ import sanitize from 'sanitize-filename';
 import { program } from 'commander';
 import { parseString } from 'xml2js';
 import { spawn } from 'child_process';
-import NBC from './src/api/index.js';
-import apiConstants from './src/api/utils/constants.js';
-import logger from './src/utils/logger.js';
-import CustomError from './src/utils/custom-error.js';
-import * as utils from './src/utils/functions.js';
+import NBC from '@nobodysec/nbc-api';
+import apiConstants from '@nobodysec/nbc-api/utils/constants.js';
+import logger from './utils/logger.js';
+import CustomError from './utils/custom-error.js';
+import * as utils from './utils/functions.js';
 
 async function parse(url, _, command)
 {
