@@ -2,7 +2,7 @@
 
 // TODO: add ffmpeg.wasm
 
-const API_URL = 'https://nbc-downloader.vercel.app/api/';
+const API_URL = `https://${window.location.host}/api/`;
 let savedRet = null;
 let b64 = null;
 
@@ -129,6 +129,15 @@ $(document).ready(async () =>
 				color: '#e2e2e2',
 				background: '#11161c',
 			});
+
+			try
+			{
+				if (ret.extra) console.log(JSON.parse(ret.extra));
+			}
+			catch
+			{
+				console.log(ret.extra);
+			}
 
 			return null;
 		}

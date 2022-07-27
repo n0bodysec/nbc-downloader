@@ -104,7 +104,7 @@ const post = async (req, res) =>
 	}
 	catch (e)
 	{
-		return sendMessage(res, 400, 'Not available');
+		return sendMessage(res, 200, 400, 'Not available', JSON.stringify(e));
 	}
 };
 
