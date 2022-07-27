@@ -4,6 +4,9 @@
 			"path": "api"
 		},
 		{
+			"path": "backend"
+		},
+		{
 			"path": "cli"
 		},
 		{

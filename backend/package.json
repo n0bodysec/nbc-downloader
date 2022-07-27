@@ -1,21 +1,25 @@
 {
-  "name": "@n0bodysec/nbcd-cli",
+  "name": "@n0bodysec/nbcd-backend",
   "version": "1.0.0",
-  "description": "An NBC.com downloader from CLI",
+  "description": "A serverless fastify backend for nbc-downloader with a simple static page",
   "private": true,
   "type": "module",
-  "main": "index.js",
+  "main": "api/serverless.js",
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
+    "@fastify/helmet": "^9.1.0",
+    "@fastify/static": "^6.4.0",
     "@n0bodysec/nbc-api": "^1.0.0",
     "axios": "^0.27.2",
-    "commander": "^9.3.0",
-    "log4js": "^6.5.2",
-    "prompt": "^1.3.0",
-    "sanitize-filename": "^1.6.3",
+    "fastify": "^4.0.3",
     "xml2js": "^0.4.23"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon api/index.js"
   },
   "repository": {
     "type": "git",
