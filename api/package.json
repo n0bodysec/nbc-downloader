@@ -1,8 +1,7 @@
 {
-  "name": "@nobodysec/nbc-api",
+  "name": "@n0bodysec/nbc-api",
   "version": "1.0.0",
   "description": "An unofficial NBC.com API",
-  "private": true,
   "type": "module",
   "main": "index.js",
   "dependencies": {

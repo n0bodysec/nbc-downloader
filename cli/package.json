@@ -1,5 +1,5 @@
 {
-  "name": "@nobodysec/nbcd-cli",
+  "name": "@n0bodysec/nbcd-cli",
   "version": "1.0.0",
   "description": "An NBC.com downloader from CLI",
   "private": true,
@@ -12,7 +12,7 @@
     "prompt": "^1.3.0",
     "sanitize-filename": "^1.6.3",
     "xml2js": "^0.4.23",
-    "@nobodysec/nbc-api": "*"
+    "@n0bodysec/nbc-api": "*"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
