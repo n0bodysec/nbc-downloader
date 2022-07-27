@@ -23,14 +23,6 @@
     "type": "git",
     "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
   },
-  "keywords": [
-    "valstrats",
-    "valstrats.js",
-    "hitbox",
-    "valorant",
-    "database",
-    "unofficial"
-  ],
   "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
   "license": "MIT",
   "bugs": {
