@@ -8,16 +8,6 @@ export function sendMessage(res, status, code, message, extra = undefined)
 	});
 }
 
-export const getLineContainingStr = (data, str) =>
-{
-	const lines = data.split('\n');
-	for (let i = 0; i < lines.length; i++)
-	{
-		if (lines[i].indexOf(str) !== -1) return lines[i];
-	}
-
-	return null;
-};
 export const getVideoType = (programmingType, fullEpisode) =>
 {
 	if (programmingType === undefined || fullEpisode === undefined) return 'Unknown';

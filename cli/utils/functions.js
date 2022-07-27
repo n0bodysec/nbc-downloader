@@ -17,17 +17,6 @@ export const ensureDir = async (dir) =>
 	return null;
 };
 
-export const getLineContainingStr = (data, str) =>
-{
-	const lines = data.split('\n');
-	for (let i = 0; i < lines.length; i++)
-	{
-		if (lines[i].indexOf(str) !== -1) return lines[i];
-	}
-
-	return null;
-};
-
 export const timeout = async (delayms) =>
 {
 	return new Promise((resolve) => { setTimeout(resolve, delayms); });

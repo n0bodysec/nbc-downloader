@@ -6,6 +6,7 @@ import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
 import sanitize from 'sanitize-filename';
+import m3u8Parser from 'm3u8-parser';
 import { program } from 'commander';
 import { parseString } from 'xml2js';
 import { spawn } from 'child_process';
@@ -17,7 +18,7 @@ import * as utils from './utils/functions.js';
 
 async function parse(url, _, command)
 {
-	const re = new RegExp('^(https?:\/\/)?(www\.)?nbc\.com\/[A-Za-z0-9-]+\/video\/[A-Za-z0-9-]+\/[0-9]+$'); // eslint-disable-line
+	const re = /^(https?:\/\/)?(www\.)?nbc\.com\/[A-Za-z0-9-]+\/video\/[A-Za-z0-9-]+\/[0-9]+$/;
 	if (!re.test(url))
 	{
 		const err = 'The entered URL is not from an nbc.com video. It should be something like: https://www.nbc.com/<show>/video/<name>/<id>';
@@ -201,11 +202,29 @@ async function download(mpxAccountId, mpxGuid, options)
 		if (options.verbose >= 1) logger(`Stream base url: ${baseUrl}`);
 
 		const masterHls = await axios.get(selectedVideo.$.src);
-		const playlistFile = utils.getLineContainingStr(masterHls.data, selectedVideo.$.height + '_hls');
-		if (options.verbose >= 1) logger(`Playlist file: ${playlistFile}`);
 
-		const m3u8 = await axios.get(baseUrl + playlistFile);
-		const parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlistFile.split('/')[0] + '/$1');
+		const parser = new m3u8Parser.Parser();
+		parser.push(masterHls.data);
+		parser.end();
+
+		const playlist = parser.manifest.playlists.find((x) => x.attributes.RESOLUTION.width == selectedVideo.$.width && x.attributes.RESOLUTION.height == selectedVideo.$.height); // eslint-disable-line eqeqeq
+		if (options.verbose >= 1) logger(`Playlist: ${playlist.uri}`);
+
+		let parsedRet = null;
+
+		const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+		if (re.test(playlist.uri))
+		{
+			const split = playlist.uri.split('/');
+			const m3u8 = await axios.get(playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, playlist.uri.replace(split[split.length - 1], '') + '$1');
+		}
+		else
+		{
+			const m3u8 = await axios.get(baseUrl + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlist.uri.split('/')[0] + '/$1');
+		}
+
 		if (options.verbose >= 1) logger('Playlist file crafted');
 
 		let outputPath;

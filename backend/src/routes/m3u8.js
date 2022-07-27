@@ -1,7 +1,8 @@
 import NBC from '@n0bodysec/nbc-api';
 import axios from 'axios';
+import m3u8Parser from 'm3u8-parser';
 import { parseString } from 'xml2js';
-import { sendMessage, getLineContainingStr, getVideoType } from '../utils/functions.js';
+import { sendMessage, getVideoType } from '../utils/functions.js';
 
 // TODO: split requests in multiple routes
 const post = async (req, res) =>
@@ -82,11 +83,28 @@ const post = async (req, res) =>
 		const baseUrl = selectedVideo.$.src.replace('master_hls.m3u8', '');
 
 		const masterHls = await axios.get(selectedVideo.$.src);
-		const playlistFile = getLineContainingStr(masterHls.data, selectedVideo.$.height + '_hls');
+
+		const parser = new m3u8Parser.Parser();
+		parser.push(masterHls.data);
+		parser.end();
+
+		const playlist = parser.manifest.playlists.find((x) => x.attributes.RESOLUTION.width == selectedVideo.$.width && x.attributes.RESOLUTION.height == selectedVideo.$.height); // eslint-disable-line eqeqeq
+
+		let parsedRet = null;
 
 		// 7. fix m3u8 ts files
-		const m3u8 = await axios.get(baseUrl + playlistFile);
-		const parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlistFile.split('/')[0] + '/$1');
+		const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+		if (re.test(playlist.uri))
+		{
+			const split = playlist.uri.split('/');
+			const m3u8 = await axios.get(playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, playlist.uri.replace(split[split.length - 1], '') + '$1');
+		}
+		else
+		{
+			const m3u8 = await axios.get(baseUrl + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlist.uri.split('/')[0] + '/$1');
+		}
 
 		// 8. return all information
 		return res.send({
@@ -98,7 +116,7 @@ const post = async (req, res) =>
 			videoInfo,
 			resolution: outRes,
 			stream_url: baseUrl,
-			playlistFile,
+			playlist: playlist.uri,
 			m3u8: parsedRet,
 		});
 	}
