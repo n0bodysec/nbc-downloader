@@ -3,35 +3,52 @@
 
 <head>
 	<title>NBC Downloader</title>
-	<style>
-		html,
-		body {
-			height: 100%;
-			color: white;
-			background: black;
-		}
-
-		.main {
-			height: 100%;
-			width: 100%;
-			display: table;
-		}
-
-		.wrapper {
-			display: table-cell;
-			height: 100%;
-			vertical-align: middle;
-			text-align: center;
-		}
-	</style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.1/video-js.min.css" integrity="sha512-D/n19dhr+LY8HOoGuybX+bJYsZOFKb0r7YpAWBMPg5Hnke6lxdHl6q21d7qiwIsMgdSnBG9pSMQlwTtZ+6ISmw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.min.css" integrity="sha512-Yn5Z4XxNnXXE8Y+h/H1fwG/2qax2MxG9GeUOWL6CYDCSp4rTFwUpOZ1PS6JOuZaPBawASndfrlWYx8RGKgILhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="main.css" />
 </head>
 
 <body>
-	<div class="main">
-		<div class="wrapper">
-			<h3>Under construction</h3>
+
+	<div class="container-main">
+		<div class="wrap-main">
+			<video id="player" class="video-js vjs-big-play-centered" controls>
+				<source id="player_source" src="data:video/x-mpegurl;base64," type="application/x-mpegurl" />
+			</video>
+
+			<div id="download-btns">
+				<button type="button" class="btn btn-primary download-btn" id="download-m3u8">Download m3u8</button>
+				<button type="button" class="btn btn-primary download-btn" id="download-mp4">Download mp4</button>
+			</div>
+
+			<form id="main-form" class="main-form">
+				<div class="wrap-input">
+					<!-- <span class="main-form-text">URL</span> -->
+					<input class="input" type="text" id="nbc_url" placeholder="https://www.nbc.com/<show>/video/<name>/<id>" spellcheck="false" />
+					<span class="focus-input"></span>
+					<span class="symbol-input"><i class="fa fa-envelope" aria-hidden="true"></i></span>
+				</div>
+
+				<div class="wrap-input">
+					<!-- <span class="main-form-text">API Password</span> -->
+					<input class="input" type="text" id="api_password" placeholder="API Password" spellcheck="false" />
+					<span class="focus-input"></span>
+					<span class="symbol-input"><i class="fa fa-lock" aria-hidden="true"></i></span>
+				</div>
+
+				<div class="container-main-form-btn">
+					<input type="button" id="nbc_btn" class="main-form-btn" value="Search"></input>
+				</div>
+			</form>
 		</div>
 	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js" integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.1/video.min.js" integrity="sha512-xT61DWoPRoAa4ir+LqER5L4/zzuO5tQOQywZYqU8BaZVqolq78bRobozDxozcCZ6tmo92zetGVQHRp+sQHIi/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.min.js" integrity="sha512-dnyteqeKASHjUgi20CTeO5cfd1JwMTNV2ZS+tx5rlPCdWgnd6UKYNLM2EarSU9E6J3lMtMhUkcA6g8f3cAjoQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="main.js"></script>
 </body>
 
 </html>

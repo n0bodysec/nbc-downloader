@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-// import cors from '@fastify/cors';
+import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
 import m3u8 from './routes/m3u8.js';
 
@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename); // eslint-disable-line no-underscore
 
 export default async function (instance, opts, done)
 {
-	// instance.register(cors);
+	instance.register(cors /* { origin: '*' } */);
 
 	instance.register(fstatic, {
 		root: path.join(__dirname, 'public'),
