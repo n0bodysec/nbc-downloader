@@ -26,7 +26,7 @@ const genRanHex = (size) => [...Array(size)].map(() => Math.floor(Math.random() 
 
 function blobToBase64(blob)
 {
-	return new Promise((resolve, _) => // eslint-disable-line
+	return new Promise((resolve) =>
 	{
 		const reader = new FileReader();
 		reader.onloadend = () => resolve(reader.result);
@@ -38,7 +38,7 @@ async function parse(url)
 {
 	try
 	{
-		const re = new RegExp('^(https?:\/\/)?(www\.)?nbc\.com\/[A-Za-z0-9-]+\/video\/[A-Za-z0-9-]+\/[0-9]+$'); // eslint-disable-line
+		const re = /^(https?:\/\/)?(www\.)?nbc\.com\/[A-Za-z0-9-]+\/video\/[A-Za-z0-9-]+\/[0-9]+$/;
 		if (!re.test(url)) throw new CustomError('InvalidURLError', 'The entered URL is not from an nbc.com video. It should be something like: https://www.nbc.com/<show>/video/<name>/<id>');
 
 		const res = await $.get(url);
@@ -145,7 +145,7 @@ $(document).ready(async () =>
 		savedRet = ret;
 		b64 = await blobToBase64(new Blob([ret.m3u8], { type: 'application/x-mpegurl' }));
 		$('#player_source')[0].src = b64;
-		const player = videojs('player'); // eslint-disable-line
+		videojs('player');
 		$('#main-form').hide();
 		$('#player').show();
 		$('#download-btns').show();
