@@ -2,8 +2,7 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "eslint": "^8.23.0",
-    "eslint-config-n0bodysec": "github:n0bodysec/eslint-config-n0bodysec",
-    "lerna": "^5.4.3"
+    "eslint": "^8.23.1",
+    "eslint-config-n0bodysec": "github:n0bodysec/eslint-config-n0bodysec"
   }
 }

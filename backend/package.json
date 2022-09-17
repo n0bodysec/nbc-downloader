@@ -7,16 +7,16 @@
   "main": "api/serverless.js",
   "dependencies": {
     "@fastify/cors": "^8.1.0",
-    "@fastify/helmet": "^9.1.0",
+    "@fastify/helmet": "^10.0.0",
     "@fastify/static": "^6.5.0",
     "@n0bodysec/nbc-api": "^1.0.0",
     "axios": "^0.27.2",
-    "fastify": "^4.5.3",
+    "fastify": "^4.6.0",
     "m3u8-parser": "^5.0.0",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.20"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
