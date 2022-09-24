@@ -5,31 +5,19 @@
   "private": true,
   "type": "module",
   "main": "api/serverless.js",
+  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
+  "repository": "https://github.com/n0bodysec/nbc-downloader.git",
+  "bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
+  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+  "license": "MIT",
   "dependencies": {
     "@fastify/cors": "^8.1.0",
     "@fastify/helmet": "^10.0.0",
     "@fastify/static": "^6.5.0",
-    "@n0bodysec/nbc-api": "^1.0.0",
+    "@n0bodysec/nbc-api": "^1.0.1",
     "axios": "^0.27.2",
     "fastify": "^4.6.0",
     "m3u8-parser": "^5.0.0",
     "xml2js": "^0.4.23"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon api/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
-  },
-  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/n0bodysec/nbc-downloader/issues"
-  },
-  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme"
+  }
 }

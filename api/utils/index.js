@@ -1,6 +1,6 @@
 class utils
 {
-	constructor (base)
+	constructor(base)
 	{
 		this.encodePassword = (password = base.password) =>
 		{

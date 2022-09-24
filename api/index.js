@@ -5,7 +5,7 @@ import Utils from './utils/index.js';
 
 class API
 {
-	constructor ()
+	constructor()
 	{
 		this.idm_tx_ref = randomUUID();
 		this.tokenId = null;

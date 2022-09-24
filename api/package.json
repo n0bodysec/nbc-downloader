@@ -1,23 +1,15 @@
 {
   "name": "@n0bodysec/nbc-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An unofficial NBC.com API",
   "type": "module",
   "main": "index.js",
-  "dependencies": {
-    "axios": "^0.27.2"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
-  },
+  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
+  "repository": "https://github.com/n0bodysec/nbc-downloader.git",
+  "bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
   "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/n0bodysec/nbc-downloader/issues"
-  },
-  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme"
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
 }

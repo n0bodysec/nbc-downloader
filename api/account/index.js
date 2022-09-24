@@ -3,7 +3,7 @@ import constants from '../utils/constants.js';
 
 class account
 {
-	constructor (base)
+	constructor(base)
 	{
 		this.register = async (username, email, password, name, surname, gender, zipNumber, birthYear, uuid = undefined) =>
 		{

@@ -17,10 +17,7 @@ export const ensureDir = async (dir) =>
 	return null;
 };
 
-export const timeout = async (delayms) =>
-{
-	return new Promise((resolve) => { setTimeout(resolve, delayms); });
-};
+export const timeout = async (delayms) => new Promise((resolve) => { setTimeout(resolve, delayms); });
 
 export const findExecutable = async (exe) =>
 {
@@ -57,10 +54,7 @@ export const getVideoType = (programmingType, fullEpisode) =>
 	return 'Clip';
 };
 
-export const genCredentials = () =>
-{
-	return {
-		username: randomBytes(8).toString('hex') + '@gmail.com',
-		password: 'P4ss@' + randomBytes(5).toString('hex'),
-	};
-};
+export const genCredentials = () => ({
+	username: randomBytes(8).toString('hex') + '@gmail.com',
+	password: 'P4ss@' + randomBytes(5).toString('hex'),
+});

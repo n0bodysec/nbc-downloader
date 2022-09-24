@@ -3,7 +3,7 @@ import constants from '../utils/constants.js';
 
 class stream
 {
-	constructor (base)
+	constructor(base)
 	{
 		this.getLink = async (mpxGuid, mpxAccountId, idmToken = base.tokenId, date = undefined) =>
 		{

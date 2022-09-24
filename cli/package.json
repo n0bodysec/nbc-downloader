@@ -5,8 +5,13 @@
   "private": true,
   "type": "module",
   "main": "index.js",
+  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
+  "repository": "https://github.com/n0bodysec/nbc-downloader.git",
+  "bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
+  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+  "license": "MIT",
   "dependencies": {
-    "@n0bodysec/nbc-api": "^1.0.0",
+    "@n0bodysec/nbc-api": "^1.0.1",
     "axios": "^0.27.2",
     "commander": "^9.4.0",
     "log4js": "^6.6.1",
@@ -14,18 +19,5 @@
     "prompt": "^1.3.0",
     "sanitize-filename": "^1.6.3",
     "xml2js": "^0.4.23"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/n0bodysec/nbc-downloader.git"
-  },
-  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/n0bodysec/nbc-downloader/issues"
-  },
-  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme"
+  }
 }

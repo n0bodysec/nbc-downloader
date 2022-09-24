@@ -29,10 +29,7 @@ const post = async (req, res) =>
 		if (session.data.result.code !== 200) return sendMessage(res, session.status, 400, outSessMsg);
 
 		// 3. get stream link
-		const link = await nbc.stream.getLink(req.body.mpxGuid, req.body.mpxAccountId).catch((e) =>
-		{
-			return sendMessage(res, 200, 400, `Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`);
-		});
+		const link = await nbc.stream.getLink(req.body.mpxGuid, req.body.mpxAccountId).catch((e) => sendMessage(res, 200, 400, `Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`));
 
 		// 4. get smil
 		const smil = await nbc.stream.getSmilHls(link.data.url);

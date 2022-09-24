@@ -8,7 +8,7 @@ let b64 = null;
 
 class CustomError extends Error
 {
-	constructor (name = 'CustomError', ...params)
+	constructor(name = 'CustomError', ...params)
 	{
 		super(...params);
 
