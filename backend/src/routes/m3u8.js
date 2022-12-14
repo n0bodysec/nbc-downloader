@@ -2,7 +2,7 @@ import NBC from '@n0bodysec/nbc-api';
 import axios from 'axios';
 import m3u8Parser from 'm3u8-parser';
 import { parseString } from 'xml2js';
-import { sendMessage, getVideoType } from '../utils/functions.js';
+import { getVideoType, sendMessage } from '../utils/functions.js';
 
 // TODO: split requests in multiple routes
 const post = async (req, res) =>
@@ -13,6 +13,8 @@ const post = async (req, res) =>
 	if (!req.body.password) return sendMessage(res, 200, 400, 'No password provided');
 	if (!req.body.mpxAccountId) return sendMessage(res, 200, 400, 'No mpxAccountId provided');
 	if (!req.body.mpxGuid) return sendMessage(res, 200, 400, 'No mpxGuid provided');
+
+	const proxy = process.env.MINIPROXY ?? '';
 
 	try
 	{
@@ -32,7 +34,7 @@ const post = async (req, res) =>
 		const link = await nbc.stream.getLink(req.body.mpxGuid, req.body.mpxAccountId).catch((e) => sendMessage(res, 200, 400, `Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`));
 
 		// 4. get smil
-		const smil = await nbc.stream.getSmilHls(link.data.url);
+		const smil = await nbc.stream.getSmilHls(proxy + link.data.url);
 
 		if (smil.data.indexOf('link.theplatform.com/s/errorFiles/Unavailable.mp4') !== -1)
 		{
@@ -79,7 +81,7 @@ const post = async (req, res) =>
 		// 6. parse m3u8
 		const baseUrl = selectedVideo.$.src.replace('master_hls.m3u8', '');
 
-		const masterHls = await axios.get(selectedVideo.$.src);
+		const masterHls = await axios.get(proxy + selectedVideo.$.src);
 
 		const parser = new m3u8Parser.Parser();
 		parser.push(masterHls.data);
@@ -94,13 +96,13 @@ const post = async (req, res) =>
 		if (re.test(playlist.uri))
 		{
 			const split = playlist.uri.split('/');
-			const m3u8 = await axios.get(playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, playlist.uri.replace(split[split.length - 1], '') + '$1');
+			const m3u8 = await axios.get(proxy + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, (match) => (proxy + playlist.uri.replace(split[split.length - 1], '') + match));
 		}
 		else
 		{
-			const m3u8 = await axios.get(baseUrl + playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlist.uri.split('/')[0] + '/$1');
+			const m3u8 = await axios.get(proxy + baseUrl + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, (match) => (proxy + baseUrl + playlist.uri.split('/')[0] + '/' + match));
 		}
 
 		// 8. return all information
