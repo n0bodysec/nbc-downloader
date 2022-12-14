@@ -2,8 +2,8 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "@n0bodysec/eslint-config": "^2.0.1",
-    "eslint": "^8.24.0",
+    "@n0bodysec/eslint-config": "^2.1.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-import": "^2.26.0"
   }
 }
