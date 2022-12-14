@@ -1,4 +1,4 @@
-export default Object.freeze({
+const constants = Object.freeze({
 	REGISTER_URL: 'https://id.nbc.com/api/2021-08/profile/email/register',
 	SESSION_URL: 'https://id.nbc.com/api/2020-07/profile/email/session',
 	PROFILE_URL: 'https://id.nbc.com/api/v3/profile',
@@ -21,3 +21,6 @@ export default Object.freeze({
 		USA: 2304992029,
 	},
 });
+
+export { constants };
+// @ignore-me
