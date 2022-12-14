@@ -1,20 +1,20 @@
 /* eslint-disable no-await-in-loop */
 
+import NBC from '@n0bodysec/nbc-api';
+import apiConstants from '@n0bodysec/nbc-api/utils/constants.js';
 import axios from 'axios';
+import { spawn } from 'child_process';
+import { program } from 'commander';
 import fs from 'fs/promises';
+import m3u8Parser from 'm3u8-parser';
 import os from 'os';
 import path from 'path';
 import prompt from 'prompt';
 import sanitize from 'sanitize-filename';
-import m3u8Parser from 'm3u8-parser';
-import { program } from 'commander';
 import { parseString } from 'xml2js';
-import { spawn } from 'child_process';
-import NBC from '@n0bodysec/nbc-api';
-import apiConstants from '@n0bodysec/nbc-api/utils/constants.js';
-import logger from './utils/logger.js';
 import CustomError from './utils/custom-error.js';
 import * as utils from './utils/functions.js';
+import logger from './utils/logger.js';
 
 async function parse(url, _, command)
 {
@@ -53,6 +53,8 @@ async function download(mpxAccountId, mpxGuid, options)
 	const nbc = new NBC();
 	const mpxGuidSplit = mpxGuid.split(',').filter((x) => x);
 	let episodeCount = apiConstants.FREE_CREDITS;
+
+	const proxy = options.proxy ?? '';
 
 	if (mpxGuidSplit.length > 1)
 	{
@@ -118,7 +120,7 @@ async function download(mpxAccountId, mpxGuid, options)
 
 		if (options.verbose >= 1) logger(`Obtained stream link: ${link.data.url}`);
 
-		const smil = await nbc.stream.getSmilHls(link.data.url);
+		const smil = await nbc.stream.getSmilHls(proxy + link.data.url);
 
 		if (smil.data.indexOf('link.theplatform.com/s/errorFiles/Unavailable.mp4') !== -1)
 		{
@@ -201,7 +203,7 @@ async function download(mpxAccountId, mpxGuid, options)
 		const baseUrl = selectedVideo.$.src.replace('master_hls.m3u8', '');
 		if (options.verbose >= 1) logger(`Stream base url: ${baseUrl}`);
 
-		const masterHls = await axios.get(selectedVideo.$.src);
+		const masterHls = await axios.get(proxy + selectedVideo.$.src);
 
 		const parser = new m3u8Parser.Parser();
 		parser.push(masterHls.data);
@@ -216,13 +218,13 @@ async function download(mpxAccountId, mpxGuid, options)
 		if (re.test(playlist.uri))
 		{
 			const split = playlist.uri.split('/');
-			const m3u8 = await axios.get(playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, playlist.uri.replace(split[split.length - 1], '') + '$1');
+			const m3u8 = await axios.get(proxy + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, proxy + playlist.uri.replace(split[split.length - 1], '') + '$1');
 		}
 		else
 		{
-			const m3u8 = await axios.get(baseUrl + playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, baseUrl + playlist.uri.split('/')[0] + '/$1');
+			const m3u8 = await axios.get(proxy + baseUrl + playlist.uri);
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, proxy + baseUrl + playlist.uri.split('/')[0] + '/$1');
 		}
 
 		if (options.verbose >= 1) logger('Playlist file crafted');
@@ -333,6 +335,7 @@ function addDownloadOptions(command)
 		.option('-c, --convert <filename>', 'convert m3u8 file to mp4 using ffmpeg (optional)')
 		.option('-f, --ffmpeg <path>', 'ffmpeg path (optional)')
 		.option('-b, --batch', 'never ask for user input, use the default behaviour (optional)')
+		.option('-P, --proxy <url>', 'http get proxy to use')
 		.option('-v, --verbose', 'display extended logging information', ((dummyValue, previous) => previous + 1), 0);
 }
 
