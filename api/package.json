@@ -10,8 +10,7 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "rimraf lib && tsc",
-		"watch": "rimraf lib && tsc -w",
-		"dev": "ts-node src/index.ts"
+		"watch": "rimraf lib && tsc -w"
 	},
 	"dependencies": {
 		"axios": "^1.2.1"

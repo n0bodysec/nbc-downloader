@@ -2,7 +2,6 @@ import { API as NBC } from '@n0bodysec/nbc-api';
 import { Stream } from '@n0bodysec/nbc-api/lib/endpoints/stream';
 import axios, { AxiosError } from 'axios';
 import { writeFile } from 'fs/promises';
-// @ts-expect-error
 import * as m3u8Parser from 'm3u8-parser';
 import { tmpdir } from 'os';
 import { join } from 'path';

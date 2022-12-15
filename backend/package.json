@@ -12,8 +12,7 @@
 	"scripts": {
 		"build": "rimraf dist && tsc",
 		"postbuild": "copyfiles -u 1 src/public/* dist/src/ && copyfiles package-lock.json dist/",
-		"watch": "rimraf dist && tsc -w",
-		"dev": "ts-node src/index.ts"
+		"watch": "rimraf dist && tsc -w"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.2.0",

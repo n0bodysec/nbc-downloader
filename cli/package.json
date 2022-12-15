@@ -10,7 +10,8 @@
 	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
 	"license": "MIT",
 	"scripts": {
-		"dev": "ts-node src/index.ts"
+		"build": "rimraf dist && tsc",
+		"watch": "rimraf dist && tsc -w"
 	},
 	"dependencies": {
 		"@n0bodysec/nbc-api": "^2.0.0",
