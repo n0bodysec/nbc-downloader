@@ -4,7 +4,8 @@ import { FastifyInstance, FastifyPluginOptions, HookHandlerDoneFunction } from '
 import path from 'path';
 import m3u8 from './routes/m3u8';
 
-export default async function (instance: FastifyInstance, opts: FastifyPluginOptions, done: HookHandlerDoneFunction)
+// eslint-disable-next-line import/prefer-default-export
+export async function app(instance: FastifyInstance, opts: FastifyPluginOptions, done: HookHandlerDoneFunction)
 {
 	instance.register(cors /* { origin: '*' } */);
 

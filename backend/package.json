@@ -3,7 +3,7 @@
 	"version": "2.0.0",
 	"description": "A serverless fastify backend for nbc-downloader with a simple static page",
 	"private": true,
-	"main": "dist/api/serverless.js",
+	"main": "api/serverless.js",
 	"homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
 	"repository": "https://github.com/n0bodysec/nbc-downloader.git",
 	"bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
@@ -11,6 +11,7 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "rimraf dist && tsc",
+		"postbuild": "copyfiles -u 1 src/public/* dist/src/ && copyfiles package-lock.json dist/",
 		"watch": "rimraf dist && tsc -w",
 		"dev": "ts-node src/index.ts"
 	},
@@ -25,6 +26,9 @@
 		"xml2js": "^0.4.23"
 	},
 	"devDependencies": {
-		"@types/xml2js": "^0.4.11"
+		"@types/xml2js": "^0.4.11",
+		"copyfiles": "^2.4.1",
+		"rimraf": "^3.0.2",
+		"typescript": "^4.9.4"
 	}
 }
