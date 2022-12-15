@@ -1,7 +1,5 @@
-'use strict'; // eslint-disable-line
-
 import Fastify from 'fastify';
-import { app as main } from '../src/app';
+import { app as main } from '../src/app'; // eslint-disable-line import/extensions
 
 const app = Fastify({
 	logger: false,
