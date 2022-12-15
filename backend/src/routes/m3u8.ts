@@ -2,7 +2,7 @@ import { API as NBC } from '@n0bodysec/nbc-api';
 import { Stream } from '@n0bodysec/nbc-api/lib/endpoints/stream';
 import axios from 'axios';
 import { FastifyReply, FastifyRequest } from 'fastify';
-import m3u8Parser from 'm3u8-parser';
+import * as m3u8Parser from 'm3u8-parser';
 import { parseString } from 'xml2js';
 import { getVideoType, sendMessage } from '../utils/functions';
 
