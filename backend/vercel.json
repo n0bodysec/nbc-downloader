@@ -1,5 +1,6 @@
 {
-	"buildCommand": "npm run build-ci",
+	"buildCommand": "npm run build",
+	"installCommand": "npm install --include=dev",
 	"outputDirectory": "dist",
 	"github": {
 		"silent": true
