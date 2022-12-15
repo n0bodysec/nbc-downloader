@@ -1,6 +1,7 @@
 # nbc-downloader
 
-**nbc-downloader** is a helper tool to download videos from [NBC](https://nbc.com).
+**nbc-downloader** is a helper tool to download videos from [NBC](https://nbc.com).  
+*Old JavaScript version can be found in the [javascript](../../tree/javascript) branch.*
 
 ## 🃏 Features
 
