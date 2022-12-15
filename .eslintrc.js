@@ -1,8 +1,14 @@
 module.exports = {
-	extends: ['@n0bodysec'],
+	plugins: ['@typescript-eslint'],
+	parser: '@typescript-eslint/parser',
+	extends: [
+		'@n0bodysec',
+		'plugin:@typescript-eslint/eslint-recommended',
+		'plugin:@typescript-eslint/recommended',
+		'plugin:import/typescript',
+	],
 	rules: {
-		'import/extensions': ['error', 'ignorePackages', {
-			js: 'always', mjs: 'always', jsx: 'always',
-		}],
+		'import/no-cycle': 'off',
+		'import/prefer-default-export': 'off',
 	},
 };

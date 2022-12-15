@@ -1,13 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cors from '@fastify/cors';
 import fstatic from '@fastify/static';
-import m3u8 from './routes/m3u8.js';
+import { FastifyInstance, FastifyPluginOptions, HookHandlerDoneFunction } from 'fastify';
+import path from 'path';
+import m3u8 from './routes/m3u8';
 
-const __filename = fileURLToPath(import.meta.url); // eslint-disable-line no-underscore-dangle
-const __dirname = path.dirname(__filename); // eslint-disable-line no-underscore-dangle
-
-export default async function (instance, opts, done)
+// eslint-disable-next-line import/prefer-default-export
+export async function app(instance: FastifyInstance, opts: FastifyPluginOptions, done: HookHandlerDoneFunction)
 {
 	instance.register(cors /* { origin: '*' } */);
 

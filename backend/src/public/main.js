@@ -1,4 +1,5 @@
-/* eslint-disable no-undef */
+/* eslint-env browser */
+/* global $, videojs, Swal */
 
 // TODO: add ffmpeg.wasm
 

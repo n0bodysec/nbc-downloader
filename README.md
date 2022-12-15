@@ -1,19 +1,14 @@
 # nbc-downloader
 
-**nbc-downloader** is a helper tool to download videos from [NBC](https://nbc.com).
+**nbc-downloader** is a helper tool to download videos from [NBC](https://nbc.com).  
+*Old JavaScript version can be found in the [javascript](../../tree/javascript) branch.*
 
 ## 🃏 Features
 
 - Download user-free, ad-free & region-free playlist (m3u8) file.
-- Download multiple TV Series episodes at once **(BETA)**.
-- Convert playlist file to mp4 using ffmpeg.
+- ~~Download multiple TV Series episodes at once **(BETA)**.~~
+- ~~Convert playlist file to mp4 using ffmpeg.~~
 - "Bypass" credits limit (registering a new account).
-
-## 🚀 Usage
-
-1. Install lerna (`npm install`).
-2. Run `npx lerna bootstrap`.
-2. Use `node cli/index.js -h` to see the program help.
 
 ## 📝 Changelog
 

@@ -1,23 +1,30 @@
 {
-  "name": "@n0bodysec/nbcd-cli",
-  "version": "1.0.0",
-  "description": "An NBC.com downloader from CLI",
-  "private": true,
-  "type": "module",
-  "main": "index.js",
-  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
-  "repository": "https://github.com/n0bodysec/nbc-downloader.git",
-  "bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
-  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
-  "license": "MIT",
-  "dependencies": {
-    "@n0bodysec/nbc-api": "^1.0.1",
-    "axios": "^1.2.1",
-    "commander": "^9.4.1",
-    "log4js": "^6.7.1",
-    "m3u8-parser": "^6.0.0",
-    "prompt": "^1.3.0",
-    "sanitize-filename": "^1.6.3",
-    "xml2js": "^0.4.23"
-  }
+	"name": "@n0bodysec/nbcd-cli",
+	"version": "2.0.0",
+	"description": "An NBC.com downloader from CLI",
+	"private": true,
+	"main": "dist/index.js",
+	"homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
+	"repository": "https://github.com/n0bodysec/nbc-downloader.git",
+	"bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
+	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+	"license": "MIT",
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"watch": "rimraf dist && tsc -w"
+	},
+	"dependencies": {
+		"@n0bodysec/nbc-api": "^2.0.0",
+		"axios": "^1.2.1",
+		"colorette": "^2.0.19",
+		"commander": "^9.4.1",
+		"m3u8-parser": "^6.0.0",
+		"prompts": "^2.4.2",
+		"sanitize-filename": "^1.6.3",
+		"xml2js": "^0.4.23"
+	},
+	"devDependencies": {
+		"@types/prompts": "^2.4.2",
+		"@types/xml2js": "^0.4.11"
+	}
 }

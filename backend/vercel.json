@@ -1,4 +1,5 @@
 {
+	"outputDirectory": "dist",
 	"github": {
 		"silent": true
 	},

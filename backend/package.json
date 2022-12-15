@@ -1,23 +1,33 @@
 {
-  "name": "@n0bodysec/nbcd-backend",
-  "version": "1.0.0",
-  "description": "A serverless fastify backend for nbc-downloader with a simple static page",
-  "private": true,
-  "type": "module",
-  "main": "api/serverless.js",
-  "homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
-  "repository": "https://github.com/n0bodysec/nbc-downloader.git",
-  "bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
-  "author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
-  "license": "MIT",
-  "dependencies": {
-    "@fastify/cors": "^8.1.0",
-    "@fastify/helmet": "^10.0.1",
-    "@fastify/static": "^6.5.0",
-    "@n0bodysec/nbc-api": "^1.0.1",
-    "axios": "^1.1.2",
-    "fastify": "^4.8.1",
-    "m3u8-parser": "^6.0.0",
-    "xml2js": "^0.4.23"
-  }
+	"name": "@n0bodysec/nbcd-backend",
+	"version": "2.0.0",
+	"description": "A serverless fastify backend for nbc-downloader with a simple static page",
+	"private": true,
+	"main": "api/serverless.js",
+	"homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
+	"repository": "https://github.com/n0bodysec/nbc-downloader.git",
+	"bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
+	"author": "Nobody <admin@n0bodysec.com> (https://n0bodysec.com)",
+	"license": "MIT",
+	"scripts": {
+		"build": "rimraf dist && tsc",
+		"postbuild": "copyfiles -u 1 src/public/* dist/src/ && copyfiles package-lock.json dist/",
+		"watch": "rimraf dist && tsc -w"
+	},
+	"dependencies": {
+		"@fastify/cors": "^8.2.0",
+		"@fastify/helmet": "^10.1.0",
+		"@fastify/static": "^6.6.0",
+		"@n0bodysec/nbc-api": "^2.0.0",
+		"axios": "^1.2.1",
+		"fastify": "^4.10.2",
+		"m3u8-parser": "^6.0.0",
+		"xml2js": "^0.4.23"
+	},
+	"devDependencies": {
+		"@types/xml2js": "^0.4.11",
+		"copyfiles": "^2.4.1",
+		"rimraf": "^3.0.2",
+		"typescript": "^4.9.4"
+	}
 }

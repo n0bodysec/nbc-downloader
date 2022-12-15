@@ -1,6 +1,6 @@
 # nbc-api
 
-**nbc-api** is is an **unofficial** [NBC](https://nbc.com) API.
+**nbc-api** is an **unofficial** [NBC](https://nbc.com) API.
 
 ## 🃏 Features
 
