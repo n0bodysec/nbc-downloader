@@ -134,6 +134,7 @@ const post = async (req: FastifyRequest<{ Body: BodyType; }>, res: FastifyReply)
 	}
 	catch (e)
 	{
+		console.error(e);
 		return sendMessage(res, 200, 400, 'Not available', JSON.stringify(e));
 	}
 };
