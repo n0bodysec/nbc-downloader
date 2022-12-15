@@ -1,11 +1,24 @@
-import NBC from '@n0bodysec/nbc-api';
+import { API as NBC } from '@n0bodysec/nbc-api';
+import { Stream } from '@n0bodysec/nbc-api/lib/endpoints/stream';
 import axios from 'axios';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import m3u8Parser from 'm3u8-parser';
 import { parseString } from 'xml2js';
-import { getVideoType, sendMessage } from '../utils/functions.js';
+import { getVideoType, sendMessage } from '../utils/functions';
+
+type xmilObject = Record<string, any>;
+
+interface BodyType
+{
+	apiPassword: string;
+	email: string;
+	password: string;
+	mpxAccountId: number;
+	mpxGuid: number;
+}
 
 // TODO: split requests in multiple routes
-const post = async (req, res) =>
+const post = async (req: FastifyRequest<{ Body: BodyType; }>, res: FastifyReply) =>
 {
 	if (!req || !req.body) return sendMessage(res, 200, 400, 'Invalid body');
 	if (req.body.apiPassword !== process.env.API_PASSWORD) return sendMessage(res, 200, 401, 'Invalid API password');
@@ -34,7 +47,7 @@ const post = async (req, res) =>
 		const link = await nbc.stream.getLink(req.body.mpxGuid, req.body.mpxAccountId).catch((e) => sendMessage(res, 200, 400, `Failed to get link: ${e.response.data.errorCode} - ${e.response.data.message} - ${e.response.data.description}`));
 
 		// 4. get smil
-		const smil = await nbc.stream.getSmilHls(proxy + link.data.url);
+		const smil = await Stream.getSmilHls(proxy + link.data.url);
 
 		if (smil.data.indexOf('link.theplatform.com/s/errorFiles/Unavailable.mp4') !== -1)
 		{
@@ -46,12 +59,12 @@ const post = async (req, res) =>
 				error = `Smil returned: ${errorInfo.$.title} - ${errorInfo.$.abstract}`;
 			});
 
-			return sendMessage(res, 200, 400, error);
+			return sendMessage(res, 200, 400, error ?? '');
 		}
 
 		// 5. parse video info
-		let videos = null; // best: videos[0].$.src
-		let videosRef = null;
+		let videos: Record<any, any>[] = []; // best: videos[0].$.src
+		let videosRef: xmilObject = {};
 
 		parseString(smil.data, (err, response) =>
 		{
@@ -61,21 +74,21 @@ const post = async (req, res) =>
 
 		const videoInfo = {
 			title: videosRef.$.title,
-			show: videosRef.param.filter((x) => x.$.name === 'show')[0].$.value,
-			programmingType: videosRef.param.filter((x) => x.$.name === 'programmingType')[0].$.value,
-			fullEpisode: videosRef.param.filter((x) => x.$.name === 'fullEpisode')[0].$.value,
-			seasonNumber: videosRef.param.filter((x) => x.$.name === 'seasonNumber')[0].$.value,
-			episodeNumber: undefined,
-			type: null,
+			show: videosRef.param.filter((x: xmilObject) => x.$.name === 'show')[0].$.value,
+			programmingType: videosRef.param.filter((x: xmilObject) => x.$.name === 'programmingType')[0].$.value,
+			fullEpisode: videosRef.param.filter((x: xmilObject) => x.$.name === 'fullEpisode')[0].$.value,
+			seasonNumber: videosRef.param.filter((x: xmilObject) => x.$.name === 'seasonNumber')[0].$.value,
+			episodeNumber: '',
+			type: '',
 		};
 
 		videoInfo.type = getVideoType(videoInfo.programmingType, videoInfo.fullEpisode);
-		if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x) => x.$.name === 'episodeNumber')[0].$.value;
+		if (videoInfo.type !== 'Clip') videoInfo.episodeNumber = videosRef.param.filter((x: xmilObject) => x.$.name === 'episodeNumber')[0].$.value;
 
 		const outFilename = videoInfo.type === 'Show' ? `${videoInfo.show} - S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title;
 		// const outInfo = `[${videoInfo.type}] ${videoInfo.type === 'Show' ? `${videoInfo.show}: S${videoInfo.seasonNumber}E${videoInfo.episodeNumber} - ${videoInfo.title}` : videoInfo.title}`;
 
-		const selectedVideo = videos[0];
+		const selectedVideo = videos[0]!;
 		const outRes = `${selectedVideo.$.width}x${selectedVideo.$.height}`;
 
 		// 6. parse m3u8
@@ -87,7 +100,7 @@ const post = async (req, res) =>
 		parser.push(masterHls.data);
 		parser.end();
 
-		const playlist = parser.manifest.playlists.find((x) => x.attributes.RESOLUTION.width == selectedVideo.$.width && x.attributes.RESOLUTION.height == selectedVideo.$.height); // eslint-disable-line eqeqeq
+		const playlist = parser.manifest.playlists.find((x: xmilObject) => x.attributes.RESOLUTION.width == selectedVideo.$.width && x.attributes.RESOLUTION.height == selectedVideo.$.height); // eslint-disable-line eqeqeq
 
 		let parsedRet = null;
 
@@ -97,12 +110,12 @@ const post = async (req, res) =>
 		{
 			const split = playlist.uri.split('/');
 			const m3u8 = await axios.get(proxy + playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, (match) => (proxy + playlist.uri.replace(split[split.length - 1], '') + match));
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, proxy + playlist.uri.replace(split[split.length - 1], '') + '$1');
 		}
 		else
 		{
 			const m3u8 = await axios.get(proxy + baseUrl + playlist.uri);
-			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, (match) => (proxy + baseUrl + playlist.uri.split('/')[0] + '/' + match));
+			parsedRet = m3u8.data.replaceAll(/^(.*\.ts)$/gm, proxy + baseUrl + playlist.uri.split('/')[0] + '/$1');
 		}
 
 		// 8. return all information

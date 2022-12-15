@@ -1,4 +1,7 @@
 {
+	"buildCommand": "npm run build",
+	"installCommand": "npm ci --omit=dev",
+	"outputDirectory": "dist",
 	"github": {
 		"silent": true
 	},
