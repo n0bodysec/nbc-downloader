@@ -11,6 +11,7 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "rimraf dist && tsc",
+		"build-ci": "tsc",
 		"watch": "rimraf dist && tsc -w",
 		"dev": "ts-node src/index.ts"
 	},
