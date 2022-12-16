@@ -10,6 +10,9 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 
+# vercel
+.vercel
+
 # compiled files
 dist/
 lib/

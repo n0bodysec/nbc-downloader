@@ -1,8 +1,9 @@
 {
 	"name": "@n0bodysec/nbc-api",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "An unofficial NBC.com API",
 	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
 	"homepage": "https://github.com/n0bodysec/nbc-downloader#readme",
 	"repository": "https://github.com/n0bodysec/nbc-downloader.git",
 	"bugs": "https://github.com/n0bodysec/nbc-downloader/issues",
